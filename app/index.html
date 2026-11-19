@@ -3,23 +3,113 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTA VI trophy checklist</title>
+<title>Vice City Trophy Atlas — GTA VI PS5 Trophy Guide &amp; Tracker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>GTA VI trophy checklist</h1>
-  <p id="progress">0 of 55 earned</p>
+<header id="masthead">
+  <div class="mast-text">
+    <p class="kicker">GRAND THEFT AUTO VI · PLAYSTATION 5 · OFFLINE GUIDE</p>
+    <h1>Vice City Trophy Atlas</h1>
+    <p class="sub">All 55 trophies with original cited guides, a 5-stage platinum roadmap, the one missable step flagged, and a tracker that saves on this device.</p>
+  </div>
+  <div class="mast-progress">
+    <div class="ring-wrap">
+      <div id="ring" class="ring"><span id="ring-num">0%</span></div>
+      <p class="ring-cap">platinum progress</p>
+    </div>
+    <div class="mast-stats">
+      <p id="progress-line" class="progress-line">0 of 55 earned</p>
+      <div id="bar" class="bar"><div id="bar-fill" class="bar-fill"></div></div>
+      <ul id="grade-counts" class="grade-counts"></ul>
+      <p class="fact-strip">55 trophies · 1 platinum · 2 gold · 6 silver · 46 bronze · 28 hidden · 0 online · ~200 h to platinum</p>
+    </div>
+  </div>
 </header>
-<div class="controls">
-  <label>Grade <select id="grade"><option value="all">All</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
-  <button id="export" type="button">Export progress</button>
-  <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
+
+<div id="missable-banner" class="missable-banner">
+  <strong>⚠ 1 MISSABLE STEP:</strong> Positive Mental Attitude — do Lucia's balcony meditation at Jason's house during <strong>Chapter 1</strong> (after Down to Earth). It is gone forever once Chapter 1 ends. No mission replay exists: keep a manual save at the start of every chapter.
 </div>
-<table>
-  <thead><tr><th>Earned</th><th>Trophy</th><th>Grade</th><th>How to get it</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
+
+<nav id="toolbar" class="toolbar" aria-label="Tracker controls">
+  <div class="tool-group">
+    <span class="tool-label">View</span>
+    <button type="button" class="chip view-chip is-on" data-view="guide">Guide &amp; Tracker</button>
+    <button type="button" class="chip view-chip" data-view="roadmap">Roadmap</button>
+  </div>
+  <div class="tool-group">
+    <span class="tool-label">Kind</span>
+    <button type="button" class="chip kind-chip is-on" data-kind="all">All</button>
+    <button type="button" class="chip kind-chip" data-kind="story">Story</button>
+    <button type="button" class="chip kind-chip" data-kind="missable">Missable</button>
+    <button type="button" class="chip kind-chip" data-kind="collectibles">Collectibles</button>
+    <button type="button" class="chip kind-chip" data-kind="activities">Activities</button>
+    <button type="button" class="chip kind-chip" data-kind="online">Online</button>
+  </div>
+  <div class="tool-group">
+    <span class="tool-label">Status</span>
+    <button type="button" class="chip status-chip is-on" data-status="all">All</button>
+    <button type="button" class="chip status-chip" data-status="earned">Earned</button>
+    <button type="button" class="chip status-chip" data-status="unearned">Unearned</button>
+  </div>
+  <div class="tool-group">
+    <label class="tool-label" for="grade-filter">Grade</label>
+    <select id="grade-filter">
+      <option value="all">All grades</option>
+      <option value="platinum">Platinum</option>
+      <option value="gold">Gold</option>
+      <option value="silver">Silver</option>
+      <option value="bronze">Bronze</option>
+    </select>
+  </div>
+  <div class="tool-group grow">
+    <label class="tool-label" for="search">Search</label>
+    <input id="search" type="search" placeholder="Search name, mission, guide…" autocomplete="off">
+  </div>
+  <div class="tool-group">
+    <span class="tool-label">Spoiler shield</span>
+    <button type="button" id="spoiler-toggle" class="chip toggle" aria-pressed="false">OFF — story trophies visible</button>
+  </div>
+  <div class="tool-group">
+    <span class="tool-label">Progress file</span>
+    <button type="button" id="export-btn" class="chip action">Export</button>
+    <label class="chip action file-label">Import<input id="import-file" type="file" accept="application/json,.json" hidden></label>
+    <button type="button" id="reset-btn" class="chip action danger">Reset</button>
+  </div>
+</nav>
+
+<main id="layout">
+  <section id="list-pane" aria-label="Trophy checklist">
+    <p id="result-line" class="result-line"></p>
+    <div id="spoiler-note" class="spoiler-note" hidden></div>
+    <div id="online-note" class="online-note" hidden>
+      <h2>No online trophies</h2>
+      <p>GTA VI's launch list is entirely single-player: 0 of the 55 trophies are online (PowerPyx and GTABase both list Online Trophies: 0). This filter stays in the Atlas so the checklist mirrors the full kind set — it correctly returns nothing.</p>
+    </div>
+    <ul id="trophy-list" class="trophy-list"></ul>
+  </section>
+
+  <aside id="detail-pane" aria-label="Trophy guide detail">
+    <div id="detail" class="detail"></div>
+  </aside>
+
+  <section id="roadmap-pane" aria-label="Platinum roadmap" hidden>
+    <div class="roadmap-head">
+      <h2>Roadmap to the Platinum — Vice Got a Price!</h2>
+      <p>One playthrough, roughly 200 hours, no difficulty setting and no mission replay (PowerPyx / GTABase). Cheats disable trophies and saving — keep them off this save. Use the 15 manual save slots: one at the start and end of each chapter, the rest rotating through free-roam cleanup.</p>
+    </div>
+    <div id="roadmap-stages"></div>
+    <div class="roadmap-foot">
+      <h3>Save discipline</h3>
+      <p>Because there is no mission replay, your saves are the only rewind button. The single missable step (Chapter 1 meditation) sits in Stage 1; everything else on this roadmap can still be done in free-roam after the credits.</p>
+    </div>
+  </section>
+</main>
+
+<footer id="colophon">
+  <p>Guides are written for this Atlas in our own words; every trophy cites its sources beside its guide — follow the links to check any claim. Official trophy names and descriptions are shown exactly as PlayStation publishes them (list via Exophase / PSNProfiles). Fan-made guide; not affiliated with Rockstar Games. Works fully offline: progress lives only in this browser.</p>
+</footer>
+
 <script type="module" src="app.js"></script>
 </body>
 </html>

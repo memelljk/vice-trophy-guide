@@ -1,18 +1,13 @@
-// A working gta6-trophy-guide-01 entry (Node 22, standard library only): the guide is this directory's app/ folder,
-// plain static files a browser opens at app/index.html (ES modules, CSS, no build step), offline: it loads nothing
-// over the network, and its trophy list and guides are app/data/trophies.json. The program hands it in: it copies app/
-// and screenshots/ from beside this file to /output and writes /output/dossier.json, the summary the judge reads (your
-// screenshots, the first load's files and bytes, and your source), with the vendored make.fun library. Leave
-// vendor/makefun-frontend.ts as it is: the scorer requires dossier.json to be byte for byte what its own copy writes.
+// Vice City Trophy Atlas — entry program for gta6-trophy-guide-01 (Node 22, standard library only).
+// The guide itself is this directory's app/ folder: plain static files (ES module, CSS, JSON data, no build
+// step) that open at app/index.html in desktop Chrome and work with the network off. This program hands the
+// entry in: it copies app/ and screenshots/ from beside this file to /output and writes /output/dossier.json
+// with buildDossier from the vendored make.fun library. vendor/makefun-frontend.ts stays byte-identical to
+// the kit's copy, because the scorer rebuilds the dossier with its own copy and compares byte for byte.
 //
-// Only the plumbing, not a winner: a plain checklist of the 55 trophies with a one-line hint each. Write a real guide
-// for every trophy in your own words, a roadmap to the platinum, filters and a spoiler setting in app/, put 3 or 4 PNG
-// or JPEG screenshots of it in screenshots/ (the first by name is the cover; shots.json says which views this
-// starter's were taken of), and run it.
-//
-// Serve it locally with `node serve.ts`, then open http://localhost:8080.
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+// Local run, outside the grader's container (MAKEFUN_OUTPUT_DIR stands in for /output):
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// Preview the guide itself with: node serve.ts  →  http://localhost:8080
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -22,6 +17,8 @@ import { buildDossier } from './vendor/makefun-frontend.ts';
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
+// Atlas build stamp: the copy below is a plain file copy, so two runs over the same
+// repository produce byte-identical output (verified by hashing both runs' trees).
 mkdirSync(out, { recursive: true });
 cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
 mkdirSync(join(out, 'screenshots'), { recursive: true });
